@@ -4,15 +4,13 @@ from werkzeug.utils import secure_filename
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
-media_path = os.path.join(base_dir, 'media')
-if not os.path.isdir(media_path):
-    os.mkdir(media_path)
+UPLOAD_FOLDER = os.path.join(base_dir, 'media')
+if not os.path.isdir(UPLOAD_FOLDER):
+    os.mkdir(UPLOAD_FOLDER)
 
-UPLOAD_FOLDER = media_path
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -47,4 +45,5 @@ def uploaded_file(filename):
 if __name__ == '__main__':
     SECRET_KEY = os.urandom(32)
     app.config['SECRET_KEY'] = SECRET_KEY
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.run(debug=True, port=5000)
