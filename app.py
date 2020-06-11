@@ -22,17 +22,15 @@ def upload_file():
     if 'image' not in request.files:
         return jsonify({'image': ['This field is required'] }), 400
     file = request.files['image']
-
-    # if user does not select file, browser also
-    # submit an empty part without filename
-    if file.filename == '':
-        return jsonify({'image': ['File format not supported'] }), 400
-    if file and allowed_file(file.filename):
+    if file:
+        if file.filename == '' and allowed_file(file.filename):
+            return jsonify({'image': ['File format not supported'] }), 400
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return jsonify({
             'image': f"{request.url_root}uploads/{filename}"
         })
+    return jsonify({'image': ['This field is required'] }), 400
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
